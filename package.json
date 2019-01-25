@@ -4,5 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node index.js"
+  },
+  "dependencies": {
+    "csv-parse": "^4.3.1"
   }
 }
