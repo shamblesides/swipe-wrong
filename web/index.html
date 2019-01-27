@@ -112,8 +112,12 @@
       },
       mounted() {
         window.addEventListener('keydown', evt => {
+          if (!evt.key.startsWith('Arrow')) return;
+
           evt.preventDefault();
+
           const btn = document.querySelector('.word:focus');
+
           if (evt.key === 'ArrowDown') {
             const nextBtn = btn && btn.nextElementSibling
               || document.querySelector('.word:first-of-type');
