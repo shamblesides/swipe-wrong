@@ -9,6 +9,9 @@
       background-color: #eeeeee;
       font-size: 200%;
     }
+    button:focus {
+      outline: solid 6px red;
+    }
     button.word {
       display: block;
       margin: 5px auto;
@@ -106,6 +109,25 @@
           await axios.post('/api/word', { word, used })
           this.chosen = {...this.chosen, [word]:used };
         },
+      },
+      mounted() {
+        window.addEventListener('keydown', evt => {
+          evt.preventDefault();
+          const btn = document.querySelector('.word:focus');
+          if (evt.key === 'ArrowDown') {
+            const nextBtn = btn && btn.nextElementSibling
+              || document.querySelector('.word:first-of-type');
+            setTimeout(() => nextBtn.focus(), 1);
+          } else if (evt.key === 'ArrowUp') {
+            const nextBtn = btn && btn.previousElementSibling
+              || document.querySelector('.word:last-of-type');
+            setTimeout(() => nextBtn.focus(), 1);
+          } else if (evt.key === 'ArrowRight') {
+            this.next();
+          } else if (evt.key === 'ArrowLeft') {
+            this.back();
+          }
+        });
       }
     })
   </script>
