@@ -36,6 +36,15 @@
     <template v-if="!loaded">
       Loading!
     </template>
+    <template v-else-if="!currentGroupName">
+      <button @click="currentGroupName='basic'">Basic</button>
+      <br/>
+      <button @click="currentGroupName='common'">Common</button>
+      <br/>
+      <button @click="currentGroupName='uncommon'">Uncommon</button>
+      <br/>
+      <button @click="currentGroupName='all'">All</button>
+    </template>
     <template v-else>
       <template v-for="w of currentWords">
         <button class="word" :class="{chosen:isChosen(w.word)}" @click="send(w.word, !isChosen(w.word))">
@@ -64,34 +73,42 @@
 
     var allWords = null;
 
+    var groups = {};
+
     var app = new Vue({
       el: '#app',
       data: {
         loaded: false,
-        groupNum: 0,
+        page: 0,
         chosen: {},
+        currentGroupName: null,
       },
       async created() {
         this.chosen = (await axios.get('/api/chosen')).data
           .reduce((set, word) => (word && (set[word] = true), set), {});
 
-        allWords = shuffleArray(
-          (await axios.get('/phrases.txt')).data
+        allWords = (await axios.get('/phrases.txt')).data
           .split('\n')
-        )
           .map(line => line.trim())
           .map(line => ({
             count: +line.split(' ')[0],
             word: line.substr(line.indexOf(' ')+1),
           }))
 
+        shuffleArray(allWords);
+
+        groups.basic = allWords.filter(({count}) => count > 50000)
+        groups.common = allWords.filter(({count}) => count > 5000)
+        groups.uncommon = allWords.filter(({count}) => count > 500)
+        groups.all = allWords
+
         this.loaded = true;
       },
       computed: {
         currentWords() {
           const perPage = 5;
-          const start = this.groupNum * perPage;
-          return allWords.slice(start, start+perPage)
+          const start = this.page * perPage;
+          return groups[this.currentGroupName].slice(start, start+perPage)
         }
       },
       methods: {
@@ -99,11 +116,16 @@
           return !!this.chosen[word];
         },
         next() {
-          ++this.groupNum;
+          if (!this.currentGroupName) return;
+          ++this.page;
+          if (this.currentWords.length === 0) --this.page
         },
         back() {
-          --this.groupNum;
-          if (this.groupNum < 0 ) this.groupNum = 0;
+          --this.page;
+          if (this.page < 0 ) {
+            this.page = 0;
+            this.currentGroupName = null;
+          }
         },
         async send(word, used) {
           await axios.post('/api/word', { word, used })
