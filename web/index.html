@@ -4,7 +4,6 @@
   <title>Word Picker</title>
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps=" crossorigin="anonymous"></script>
   <style>
     button {
       background-color: #eeeeee;
@@ -38,9 +37,10 @@
         array[i] = array[j];
         array[j] = temp;
       }
+      return array;
     }
 
-    var wordGroups = null;
+    var allWords = null;
 
     var app = new Vue({
       el: '#app',
@@ -50,18 +50,26 @@
         chosen: {},
       },
       async created() {
-        const { data } = await axios.get('/phrases.txt');
-        const words = data.split('\n').map(line => line.trim()).map(line => ({
-          count: +line.split(' ')[0],
-          word: line.substr(line.indexOf(' ')+1),
-        }))
-        shuffleArray(words);
-        wordGroups = _.chunk(words, 10)
+        this.chosen = (await axios.get('/api/chosen')).data
+          .reduce((set, word) => (word && (set[word] = true), set), {});
+
+        allWords = shuffleArray(
+          (await axios.get('/phrases.txt')).data
+          .split('\n')
+        )
+          .map(line => line.trim())
+          .map(line => ({
+            count: +line.split(' ')[0],
+            word: line.substr(line.indexOf(' ')+1),
+          }))
+
         this.loaded = true;
       },
       computed: {
         currentWords() {
-          return this.loaded && wordGroups[this.groupNum];
+          const perPage = 5;
+          const start = this.groupNum * perPage;
+          return allWords.slice(start, start+perPage)
         }
       },
       methods: {
