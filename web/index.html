@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Word Picker</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps=" crossorigin="anonymous"></script>
+  <style>
+    button {
+      background-color: #eeeeee;
+      font-size: 300%;
+    }
+    button.chosen {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <template v-if="!loaded">
+      Loading!
+    </template>
+    <template v-else>
+      <template v-for="w of currentWords">
+        <button :class="{chosen:isChosen(w.word)}" @click="send(w.word, !isChosen(w.word))">{{ w.word }} ({{ w.count }})</button>
+      </template>
+      <br><br>
+      <button @click="back">&lt; back</button>
+      <button @click="next">NEXT &gt;</button>
+    </template>
+  </div>
+
+  <script>
+    function shuffleArray(array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }
+
+    var wordGroups = null;
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        loaded: false,
+        groupNum: 0,
+        chosen: {},
+      },
+      async created() {
+        const { data } = await axios.get('/phrases.txt');
+        const words = data.split('\n').map(line => line.trim()).map(line => ({
+          count: +line.split(' ')[0],
+          word: line.substr(line.indexOf(' ')+1),
+        }))
+        shuffleArray(words);
+        wordGroups = _.chunk(words, 10)
+        this.loaded = true;
+      },
+      computed: {
+        currentWords() {
+          return this.loaded && wordGroups[this.groupNum];
+        }
+      },
+      methods: {
+        isChosen(word) {
+          return !!this.chosen[word];
+        },
+        next() {
+          ++this.groupNum;
+        },
+        back() {
+          --this.groupNum;
+          if (this.groupNum < 0 ) this.groupNum = 0;
+        },
+        async send(word, used) {
+          await axios.post('/api/word', { word, used })
+          this.chosen = {...this.chosen, [word]:used };
+        },
+      }
+    })
+  </script>
+</body>
+</html>
