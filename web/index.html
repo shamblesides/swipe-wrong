@@ -7,10 +7,24 @@
   <style>
     button {
       background-color: #eeeeee;
-      font-size: 300%;
+      font-size: 200%;
+    }
+    button.word {
+      display: block;
+      margin: 5px auto;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+    }
+    button.word strong {
+      flex: 1;
+      text-align: left;
     }
     button.chosen {
       background-color: red;
+    }
+    .bottom {
+      text-align: center;
     }
   </style>
 </head>
@@ -21,11 +35,16 @@
     </template>
     <template v-else>
       <template v-for="w of currentWords">
-        <button :class="{chosen:isChosen(w.word)}" @click="send(w.word, !isChosen(w.word))">{{ w.word }} ({{ w.count }})</button>
+        <button class="word" :class="{chosen:isChosen(w.word)}" @click="send(w.word, !isChosen(w.word))">
+          <strong>{{ w.word }}</strong>
+          <span>{{ w.count }}</span>
+        </button>
       </template>
       <br><br>
-      <button @click="back">&lt; back</button>
-      <button @click="next">NEXT &gt;</button>
+      <div class="bottom">
+        <button @click="back">&lt; back</button>
+        <button @click="next">NEXT &gt;</button>
+      </div>
     </template>
   </div>
 
