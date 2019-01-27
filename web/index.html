@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Word Picker</title>
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <style>
     button {
       background-color: #eeeeee;
-      font-size: 200%;
+      font-size: 150%;
+      padding: 5px 10px;
+      width: 100%;
     }
     button:focus {
       outline: solid 6px red;
@@ -15,7 +19,6 @@
     button.word {
       display: block;
       margin: 5px auto;
-      width: 100%;
       max-width: 600px;
       display: flex;
     }
@@ -28,6 +31,17 @@
     }
     .bottom {
       text-align: center;
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+    }
+    .bottom button {
+      height: 100px;
+      width: 40%;
+    }
+    * {
+      touch-action: manipulation;
     }
   </style>
 </head>
