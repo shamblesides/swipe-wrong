@@ -12,7 +12,7 @@ const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     }))
     .map(({ word, weight }) => ({
         word,
-        weight: weight ** 1.01
+        weight: weight ** 0.93
     }))
     .reduce((map, { word, weight }) => word ? map.set(word, weight) : map, new Map())
 
@@ -40,6 +40,9 @@ function randomWord() {
 }
 
 const app = express();
-app.get('/api/words', (req, res) => res.json(Array(30*4).fill().map(randomWord)));
+app.get('/api/words', (req, res) => res.json({
+    time: 60,
+    words: Array(60*4).fill().map(randomWord)
+}));
 app.use(express.static(path.join(__dirname, 'web')));
 app.listen(80, (err) => console.log(err || 'Ready'));

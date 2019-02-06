@@ -82,15 +82,21 @@
     var app = new Vue({
       el: '#app',
       data: {
+        startTime: null,
         t: 0,
         words: null
       },
       async mounted() {
-        const words = (await axios.get('/api/words')).data
+        // get game data from server
+        const { words, time } = (await axios.get('/api/words')).data
         this.words = [];
-        const interval = 30 * 1000 / words.length;
+        this.startTime = time;
+
+        // drop words over the time interval
+        const interval = this.startTime * 1000 / words.length;
         words.forEach((word, i) => setTimeout(() => this.dropWord(word, i), i * interval));
 
+        // increase current time counter
         let t0 = null;
         window.requestAnimationFrame(function frame(t1) {
           if (t0 != null) {
@@ -103,7 +109,7 @@
       },
       computed: {
         timer() {
-          return Math.max(0, 30 - this.t).toFixed(2);
+          return Math.max(0, this.startTime - this.t).toFixed(2);
         }
       },
       methods: {
