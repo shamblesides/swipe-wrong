@@ -12,7 +12,7 @@ const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     }))
     .map(({ word, weight }) => ({
         word,
-        weight: weight ** 1.05
+        weight: weight ** 1.01
     }))
     .reduce((map, { word, weight }) => word ? map.set(word, weight) : map, new Map())
 
