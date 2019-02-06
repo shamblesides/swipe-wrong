@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const express = require('express');
 
 const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     .toString()
@@ -11,7 +12,7 @@ const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     }))
     .map(({ word, weight }) => ({
         word,
-        weight: weight ** .8
+        weight: weight ** 1.05
     }))
     .reduce((map, { word, weight }) => word ? map.set(word, weight) : map, new Map())
 
@@ -35,7 +36,10 @@ function randomWord() {
         if (i < min) r = mid - 1;
         else l = mid;
     }
-    return db[l];
+    return db[l].word;
 }
 
-setInterval(() => console.log(randomWord().word), 200);
+const app = express();
+app.get('/api/words', (req, res) => res.json(Array(30*4).fill().map(randomWord)));
+app.use(express.static(path.join(__dirname, 'web')));
+app.listen(80, (err) => console.log(err || 'Ready'));

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swipe Wrong</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <style>
+  </style>
+</head>
+<body>
+  <div id="app">
+    <template v-if="words == null">
+      Loading!
+    </template>
+    <template v-else>
+      <div v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: wordBlock.x, top: y(wordBlock), position: 'fixed' }">
+        {{ wordBlock.word }}
+      </div>
+    </template>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        t: 0,
+        words: null
+      },
+      async mounted() {
+        const words = (await axios.get('/api/words')).data
+        this.words = [];
+        words.forEach((word, i) => setTimeout(() => this.dropWord(word, i), i * 500));
+
+        let t0 = null;
+        window.requestAnimationFrame(function frame(t1) {
+          if (t0 != null) {
+            const dt = t1 - t0;
+            this.t += dt;
+          }
+          t0 = t1;
+          window.requestAnimationFrame(frame.bind(this));
+        }.bind(this))
+      },
+      methods: {
+        dropWord(word, i) {
+          const x = Math.floor(Math.random() * 100) + 'px';
+          const t0 = this.t;
+          this.words.push({ word, x, t0, i })
+          this.words = this.words.slice(-20);
+        },
+        y(word) {
+          const t = (this.t - word.t0) / 1000;
+          return (5*(t**2) + 20*t) + 'px';
+        },
+      },
+    })
+  </script>
+</body>
+</html>
