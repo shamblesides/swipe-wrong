@@ -15,7 +15,7 @@
       Loading!
     </template>
     <template v-else>
-      <div v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: wordBlock.x, top: y(wordBlock), position: 'fixed' }">
+      <div v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock), position: 'fixed' }">
         {{ wordBlock.word }}
       </div>
     </template>
@@ -45,10 +45,14 @@
       },
       methods: {
         dropWord(word, i) {
-          const x = Math.floor(Math.random() * 100) + 'px';
+          const x0 = Math.floor(Math.random() * 100);
           const t0 = this.t;
-          this.words.push({ word, x, t0, i })
+          this.words.push({ word, x0, t0, i })
           this.words = this.words.slice(-20);
+        },
+        x(word) {
+          const t = (this.t - word.t0) / 1000;
+          return (word.x0 - 50) * (1 + -0.01*t) + 50 + 'px';
         },
         y(word) {
           const t = (this.t - word.t0) / 1000;
