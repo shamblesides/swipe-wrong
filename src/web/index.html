@@ -7,6 +7,53 @@
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <style>
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      display: flex;
+      margin: 0;
+    }
+    #app {
+      display: flex;
+      flex: 1;
+    }
+    #game {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+          -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome and Opera */
+    }
+    #timer {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    @media screen and (orientation:portrait) {
+      #game {
+        flex-direction: column-reverse;
+      }
+    }
+    #bio-area {
+      display: flex;
+      flex: 1;
+      background-color: #F9D0DA;
+    }
+    #waterfall-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .word {
+      position: absolute;
+    }
   </style>
 </head>
 <body>
@@ -15,8 +62,18 @@
       Loading!
     </template>
     <template v-else>
-      <div v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock), position: 'fixed' }">
-        {{ wordBlock.word }}
+      <div id="game">
+        <div id="bio-area">
+
+        </div>
+        <div id="waterfall-area">
+          <div id="timer">
+            {{ timer }}
+          </div>
+          <div class="word" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock) }">
+            {{ wordBlock.word }}
+          </div>
+        </div>
       </div>
     </template>
   </div>
@@ -31,32 +88,38 @@
       async mounted() {
         const words = (await axios.get('/api/words')).data
         this.words = [];
-        words.forEach((word, i) => setTimeout(() => this.dropWord(word, i), i * 500));
+        const interval = 30 * 1000 / words.length;
+        words.forEach((word, i) => setTimeout(() => this.dropWord(word, i), i * interval));
 
         let t0 = null;
         window.requestAnimationFrame(function frame(t1) {
           if (t0 != null) {
             const dt = t1 - t0;
-            this.t += dt;
+            this.t += (dt / 1000);
           }
           t0 = t1;
           window.requestAnimationFrame(frame.bind(this));
         }.bind(this))
       },
+      computed: {
+        timer() {
+          return Math.max(0, 30 - this.t).toFixed(2);
+        }
+      },
       methods: {
         dropWord(word, i) {
-          const x0 = Math.floor(Math.random() * 100);
+          const x0 = Math.random();
           const t0 = this.t;
           this.words.push({ word, x0, t0, i })
-          this.words = this.words.slice(-20);
+          this.words = this.words.slice(-40);
         },
         x(word) {
-          const t = (this.t - word.t0) / 1000;
-          return (word.x0 - 50) * (1 + -0.01*t) + 50 + 'px';
+          const t = (this.t - word.t0);
+          return ((word.x0 - .5) * (1 + -0.01*t) + .5) * 95 + '%';
         },
         y(word) {
-          const t = (this.t - word.t0) / 1000;
-          return (5*(t**2) + 20*t) + 'px';
+          const t = (this.t - word.t0);
+          return (5*(t**2) + 30*t - 30) + 'px';
         },
       },
     })
