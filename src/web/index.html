@@ -85,10 +85,10 @@
     }
     @keyframes wobble-big {
       0% {
-        transform: scale(3) translate(0px, -5px) rotate(5deg);
+        transform: scale(1.5) translate(0px, -5px) rotate(5deg);
       }
       100% {
-        transform: scale(3) translate(0px, -5px) rotate(-5deg);
+        transform: scale(1.5) translate(0px, -5px) rotate(-5deg);
       }
     }
   </style>
@@ -164,9 +164,10 @@
       },
       methods: {
         dropWord(word, i) {
-          const x0 = Math.random();
+          const x = Math.random() * (document.querySelector('#bio-area').clientWidth) * 0.9;
+          const y0 = -30;
           const t0 = this.t;
-          const wordBlock = { word, x0, t0, i };
+          const wordBlock = { word, x, y0, t0, i };
           this.words.push(wordBlock)
 
           this.$nextTick(() => {
@@ -186,22 +187,24 @@
                 },
                 onend: () => {
                   wordBlock.selected = false;
+                  if (!wordBlock.inProfile) {
+                    wordBlock.y0 = wordBlock.y;
+                    wordBlock.t0 = this.t;
+                    delete wordBlock.x;
+                    delete wordBlock.y;
+                  }
                 }
               })
           })
         },
         x(word) {
-          if (word.x != null) return word.x + 'px';
-
-          const t = (this.t - word.t0);
-          const xp = ((word.x0 - .5) * (1 + -0.01*t) + .5) * 95;
-          return xp + '%';
+          return word.x + 'px';
         },
         y(word) {
           if (word.y != null) return word.y + 'px';
 
           const t = (this.t - word.t0);
-          const y = (5*(t**2) + 30*t - 30);
+          const y = (5*(t**2) + 30*t + word.y0);
           return y + 'px';
         },
       },
