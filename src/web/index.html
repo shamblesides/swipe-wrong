@@ -13,17 +13,16 @@
     }
     body {
       height: 100%;
-      display: flex;
       margin: 0;
     }
     #app {
-      display: flex;
-      flex: 1;
+      height: 100%;
     }
     #game {
-      display: flex;
-      flex: 1;
+      height: 100%;
       flex-direction: row;
+      position: relative;
+      overflow: hidden;
       -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
           -khtml-user-select: none; /* Konqueror HTML */
@@ -37,30 +36,41 @@
       right: 10px;
       top: 10px;
     }
+    #bio-area {
+      position: absolute;
+      background-color: #F9D0DA;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: initial;
+      width: 50%;
+      height: 100%;
+      z-index: 10;
+    }
     @media screen and (orientation:portrait) {
-      #game {
-        flex-direction: column-reverse;
+      #bio-area {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: initial;
+        width: 100%;
+        height: 50%;
       }
     }
-    #bio-area {
-      display: flex;
-      flex: 1;
-      background-color: #F9D0DA;
-    }
-    #waterfall-area {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
     .word {
+      padding: 10px;
       position: absolute;
       animation: wobble 2s infinite;
       animation-direction: alternate;
+    }
+    .word:hover {
+      color: red;
     }
     .word.selected {
       animation: wobble-big 0.5s infinite;
       animation-direction: alternate;
       text-shadow: rgba(0,0,0,1) 0px 5px 5px;
+      z-index: 20;
     }
     @keyframes wobble {
       0% {
@@ -90,13 +100,11 @@
         <div id="bio-area">
 
         </div>
-        <div id="waterfall-area">
-          <div id="timer">
-            {{ timer }}
-          </div>
-          <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+wordBlock.i" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock) }">
-            {{ wordBlock.word }}
-          </div>
+        <div id="timer">
+          {{ timer }}
+        </div>
+        <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+wordBlock.i" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock), 'z-index': wordBlock.inProfile ? 15 : 0 }">
+          {{ wordBlock.word }}
         </div>
       </div>
     </template>
@@ -130,6 +138,21 @@
           t0 = t1;
           window.requestAnimationFrame(frame.bind(this));
         }.bind(this))
+
+        // mark bio as a drop zone
+        interact('#bio-area').dropzone({
+          accept: '.word',
+          ondragenter: evt => {
+            const id = +evt.relatedTarget.id.substr(4)
+            const wordBlock = this.words.find(({i}) => i === id);
+            wordBlock.inProfile = true;
+          },
+          ondragleave: evt => {
+            const id = +evt.relatedTarget.id.substr(4)
+            const wordBlock = this.words.find(({i}) => i === id);
+            wordBlock.inProfile = false;
+          }
+        })
       },
       computed: {
         timer() {
@@ -168,13 +191,15 @@
           if (word.x != null) return word.x + 'px';
 
           const t = (this.t - word.t0);
-          return ((word.x0 - .5) * (1 + -0.01*t) + .5) * 95 + '%';
+          const xp = ((word.x0 - .5) * (1 + -0.01*t) + .5) * 95;
+          return xp + '%';
         },
         y(word) {
           if (word.y != null) return word.y + 'px';
 
           const t = (this.t - word.t0);
-          return (5*(t**2) + 30*t - 30) + 'px';
+          const y = (5*(t**2) + 30*t - 30);
+          return y + 'px';
         },
       },
     })
