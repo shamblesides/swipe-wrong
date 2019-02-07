@@ -6,6 +6,7 @@
   <title>Swipe Wrong</title>
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script>
   <style>
     html {
       height: 100%;
@@ -53,6 +54,29 @@
     }
     .word {
       position: absolute;
+      animation: wobble 2s infinite;
+      animation-direction: alternate;
+    }
+    .word.selected {
+      animation: wobble-big 0.5s infinite;
+      animation-direction: alternate;
+      text-shadow: rgba(0,0,0,1) 0px 5px 5px;
+    }
+    @keyframes wobble {
+      0% {
+        transform: rotate(5deg);
+      }
+      100% {
+        transform: rotate(-5deg);
+      }
+    }
+    @keyframes wobble-big {
+      0% {
+        transform: scale(3) translate(0px, -5px) rotate(5deg);
+      }
+      100% {
+        transform: scale(3) translate(0px, -5px) rotate(-5deg);
+      }
     }
   </style>
 </head>
@@ -70,7 +94,7 @@
           <div id="timer">
             {{ timer }}
           </div>
-          <div class="word" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock) }">
+          <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+wordBlock.i" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock) }">
             {{ wordBlock.word }}
           </div>
         </div>
@@ -116,14 +140,39 @@
         dropWord(word, i) {
           const x0 = Math.random();
           const t0 = this.t;
-          this.words.push({ word, x0, t0, i })
-          this.words = this.words.slice(-40);
+          const wordBlock = { word, x0, t0, i };
+          this.words.push(wordBlock)
+
+          this.$nextTick(() => {
+            const el = document.querySelector('#word'+i);
+            interact(document.querySelector('#word'+i))
+              .origin('parent')
+              .draggable({
+                intertia: true,
+                onstart: evt => {
+                  wordBlock.selected = true;
+                  wordBlock.x = evt.x0 - el.clientWidth/2;
+                  wordBlock.y = evt.y0 - el.clientHeight/2;
+                },
+                onmove: evt => {
+                  wordBlock.x += evt.dx;
+                  wordBlock.y += evt.dy;
+                },
+                onend: () => {
+                  wordBlock.selected = false;
+                }
+              })
+          })
         },
         x(word) {
+          if (word.x != null) return word.x + 'px';
+
           const t = (this.t - word.t0);
           return ((word.x0 - .5) * (1 + -0.01*t) + .5) * 95 + '%';
         },
         y(word) {
+          if (word.y != null) return word.y + 'px';
+
           const t = (this.t - word.t0);
           return (5*(t**2) + 30*t - 30) + 'px';
         },
