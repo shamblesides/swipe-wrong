@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const nanoid = require('nanoid/generate');
 
 const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     .toString()
@@ -39,10 +40,23 @@ function randomWord() {
     return db[l].word;
 }
 
+const profiles = {};
+
 const app = express();
+app.use(express.json());
 app.get('/api/words', (req, res) => res.json({
     time: 60,
     words: Array(60*4).fill().map(randomWord)
 }));
+app.post('/api/profile', (req, res) => {
+    const id = nanoid('abcdefhjknpstxyz23456789', 12).match(/.{4}/g).join('-');
+
+    // TODO validate
+    profiles[id] = req.body;
+    res.status(200).json({ id });
+});
+app.get('/api/profile/:id([-0-9a-z]+)', (req, res) => {
+    res.json(profiles[req.params.id]);
+});
 app.use(express.static(path.join(__dirname, 'web')));
 app.listen(80, (err) => console.log(err || 'Ready'));

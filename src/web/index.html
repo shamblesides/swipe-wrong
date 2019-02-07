@@ -91,6 +91,11 @@
         transform: scale(1.5) translate(0px, -5px) rotate(-5deg);
       }
     }
+    #submit-button {
+      position: absolute;
+      right: 10px;
+      top: 50px;
+    }
   </style>
 </head>
 <body>
@@ -106,6 +111,7 @@
         <div id="timer">
           {{ timer }}
         </div>
+        <button id="submit-button" @click="submit" v-if="timerRaw < -6">All Done</button>
         <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+wordBlock.i" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock), 'z-index': wordBlock.inProfile ? 15 : 0 }">
           {{ wordBlock.word }}
         </div>
@@ -160,6 +166,9 @@
       computed: {
         timer() {
           return Math.max(0, this.startTime - this.t).toFixed(2);
+        },
+        timerRaw() {
+          return this.startTime - this.t;
         }
       },
       methods: {
@@ -207,6 +216,18 @@
           const y = (5*(t**2) + 30*t + word.y0);
           return y + 'px';
         },
+        async submit() {
+          const { offsetLeft, offsetTop } = document.querySelector('#bio-area');
+          const words = this.words
+            .filter(word => word.inProfile)
+            .map(({ word, x, y }) => ({
+              word,
+              x: x - offsetLeft,
+              y: y - offsetTop
+            }))
+
+          const res = await axios.post('/api/profile', words);
+        }
       },
     })
   </script>
