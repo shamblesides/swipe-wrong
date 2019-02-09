@@ -55,14 +55,17 @@ const profiles = {};
 const app = express();
 app.use(express.json());
 app.get('/api/words', (req, res) => {
-    const words = Array(60*4).fill().map(randomWord);
     const time = 60;
-    const token = jwt.sign({ words }, jwtSecret, { expiresIn: '15 minutes' })
+    const words = Array(time*4).fill().map(randomWord);
+    const futureSlug = nanoid('abcdefhjknpstxyz23456789', 12).match(/.{4}/g).join('-');
+    const token = jwt.sign({ words, futureSlug }, jwtSecret, { expiresIn: '15 minutes' })
     res.json({ words, time, token });
 });
 app.post('/api/profile', auth, (req, res) => {
+    // validate everything
     const validators = [
         body => Array.isArray(body),
+        body => body.length <= req.user.words.length,
         body => body.every(el => (typeof el === 'object')),
         body => body.every(el => (
             JSON.stringify(Object.keys(el).sort()) === JSON.stringify(["word","x","y"])
@@ -76,10 +79,17 @@ app.post('/api/profile', auth, (req, res) => {
             return res.status(400).json({ error: "Invalid body" });
         }
     }
-    const id = nanoid('abcdefhjknpstxyz23456789', 12).match(/.{4}/g).join('-');
-    profiles[id] = req.body;
-    const token = jwt.sign({ id }, jwtSecret)
-    res.status(200).json({ id, token });
+    const allowedWords = [...req.user.words];
+    for (const word of req.body.map(el => el.word)) {
+        const idx = allowedWords.indexOf(word);
+        if (idx === -1) return res.status(400).json({ error: `Invalid word: ${word}`})
+        allowedWords.splice(idx, 1);
+    }
+
+    const slug = req.user.futureSlug;
+    profiles[slug] = req.body;
+    const token = jwt.sign({ slug }, jwtSecret)
+    res.status(200).json({ slug, token });
 });
 app.get('/api/profile/:id([-0-9a-z]+)', (req, res) => {
     res.json(profiles[req.params.id]);
