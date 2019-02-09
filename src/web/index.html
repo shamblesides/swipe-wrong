@@ -194,6 +194,14 @@
                 }
               })
           })
+
+          const removalTimer = setInterval(() => {
+            const y = +this.y(wordBlock).slice(0, -2); //remove 'px'
+            if (y > 900) {
+              clearInterval(removalTimer)
+              this.words.splice(this.words.indexOf(wordBlock), 1);
+            }
+          }, 1000)
         },
         x(word) {
           return word.x + 'px';
