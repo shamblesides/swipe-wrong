@@ -56,7 +56,8 @@
       router: new VueRouter({
         routes: [
           { path: '/', name: 'home', component: httpVueLoader('home.vue') },
-          { path: '/g', name: 'game', component: httpVueLoader('game.vue') }
+          { path: '/g', name: 'game', component: httpVueLoader('game.vue') },
+          { path: '/p/:id', name: 'profile', component: httpVueLoader('profile.vue') },
         ]
       })
     })

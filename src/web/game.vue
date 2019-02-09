@@ -141,6 +141,8 @@
           }))
 
         const res = await axios.post('/api/profile', words);
+        localStorage.setItem("profileToken", res.data.token)
+        this.$router.push({ name: 'profile', params: { id: res.data.slug }})
       }
     },
   })
