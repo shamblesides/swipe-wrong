@@ -92,7 +92,13 @@ app.post('/api/profile', auth, (req, res) => {
     res.status(200).json({ slug, token });
 });
 app.get('/api/profile/:id([-0-9a-z]+)', (req, res) => {
-    res.json(profiles[req.params.id]);
+    const profile = profiles[req.params.id];
+    if (profile) {
+        res.json(profiles[req.params.id]);
+    } else {
+        res.status(404).json({ error: 'Not found' })
+    }
+    
 });
 app.use(express.static(path.join(__dirname, 'web')));
 app.listen(80, (err) => console.log(err || 'Ready'));
