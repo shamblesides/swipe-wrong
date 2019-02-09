@@ -1,7 +1,17 @@
 const fs = require('fs');
+const crypto = require('crypto');
 const path = require('path');
 const express = require('express');
 const nanoid = require('nanoid/generate');
+const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
+
+if (!fs.existsSync('./secret')) {
+    const secret = crypto.randomBytes(256/8)
+    fs.writeFileSync('./secret', secret);
+}
+const jwtSecret = fs.readFileSync('./secret');
+const auth = expressJwt({ secret: jwtSecret })
 
 const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     .toString()
@@ -44,16 +54,32 @@ const profiles = {};
 
 const app = express();
 app.use(express.json());
-app.get('/api/words', (req, res) => res.json({
-    time: 60,
-    words: Array(60*4).fill().map(randomWord)
-}));
-app.post('/api/profile', (req, res) => {
+app.get('/api/words', (req, res) => {
+    const words = Array(60*4).fill().map(randomWord);
+    const time = 60;
+    const token = jwt.sign({ words }, jwtSecret, { expiresIn: '15 minutes' })
+    res.json({ words, time, token });
+});
+app.post('/api/profile', auth, (req, res) => {
+    const validators = [
+        body => Array.isArray(body),
+        body => body.every(el => (typeof el === 'object')),
+        body => body.every(el => (
+            JSON.stringify(Object.keys(el).sort()) === JSON.stringify(["word","x","y"])
+        )),
+        body => body.every(el => typeof el.word === 'string'),
+        body => body.every(el => typeof el.x === 'number'),
+        body => body.every(el => typeof el.y === 'number'),
+    ];
+    for (const validator of validators) {
+        if (!validator(req.body)) {
+            return res.status(400).json({ error: "Invalid body" });
+        }
+    }
     const id = nanoid('abcdefhjknpstxyz23456789', 12).match(/.{4}/g).join('-');
-
-    // TODO validate
     profiles[id] = req.body;
-    res.status(200).json({ id });
+    const token = jwt.sign({ id }, jwtSecret)
+    res.status(200).json({ id, token });
 });
 app.get('/api/profile/:id([-0-9a-z]+)', (req, res) => {
     res.json(profiles[req.params.id]);

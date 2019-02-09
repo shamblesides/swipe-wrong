@@ -116,9 +116,12 @@
       },
       async mounted() {
         // get game data from server
-        const { words, time } = (await axios.get('/api/words')).data
+        const { words, time, token } = (await axios.get('/api/words')).data
         this.words = [];
         this.startTime = time;
+
+        // auth bearer to submit data
+        axios.defaults.headers.common.authorization = 'Bearer ' + token;
 
         // drop words over the time interval
         const interval = this.startTime * 1000 / words.length;
