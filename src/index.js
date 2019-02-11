@@ -6,6 +6,7 @@ const nanoid = require('nanoid/generate');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const randomWord = require('./words');
+const db = require('./db');
 
 if (!fs.existsSync('./secret')) {
     const secret = crypto.randomBytes(256/8)
@@ -13,8 +14,6 @@ if (!fs.existsSync('./secret')) {
 }
 const jwtSecret = fs.readFileSync('./secret');
 const auth = expressJwt({ secret: jwtSecret })
-
-const profiles = {};
 
 const app = express();
 app.use(express.json());
@@ -25,7 +24,7 @@ app.get('/api/words', (req, res) => {
     const token = jwt.sign({ words, futureSlug }, jwtSecret, { expiresIn: '15 minutes' })
     res.json({ words, time, token });
 });
-app.post('/api/profile', auth, (req, res) => {
+app.post('/api/profile', auth, async (req, res) => {
     // validate everything
     const validators = [
         body => Array.isArray(body),
@@ -51,14 +50,14 @@ app.post('/api/profile', auth, (req, res) => {
     }
 
     const slug = req.user.futureSlug;
-    profiles[slug] = req.body;
+    await (await db()).collection('profiles').insertOne({ _id: slug, words: req.body });
     const token = jwt.sign({ slug }, jwtSecret)
     res.status(200).json({ slug, token });
 });
-app.get('/api/profile/:id([-0-9a-z]+)', (req, res) => {
-    const profile = profiles[req.params.id];
+app.get('/api/profile/:id([-0-9a-z]+)', async (req, res) => {
+    const profile = await (await db()).collection('profiles').findOne({ _id: req.params.id });
     if (profile) {
-        res.json(profiles[req.params.id]);
+        res.json(profile.words);
     } else {
         res.status(404).json({ error: 'Not found' })
     }
