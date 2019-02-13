@@ -8,6 +8,8 @@ services:
       - mongo-data:/data/db
   node:
     image: node:10-alpine
+    depends_on:
+      - mongo
     restart: on-failure
     volumes:
       - ./src:/usr/src/app/src:ro
