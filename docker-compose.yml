@@ -19,7 +19,7 @@ services:
       NODE_ENV: production
     ports:
       - "80:80"
-    command: npm install && node src/index.js
+    command: sh -c 'npm install && node src/index.js'
 
 volumes:
   mongo-data: {}
