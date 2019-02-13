@@ -14,7 +14,7 @@ services:
       - ./package.json:/usr/src/app/package.json:ro
       - ./package-lock.json:/usr/src/app/package-lock.json
       - node_modules:/usr/src/app/node_modules
-      - node-secret:/usr/src/app/secrets
+      - node-secrets:/usr/src/app/secrets
     working_dir: /usr/src/app
     environment:
       NODE_ENV: production
