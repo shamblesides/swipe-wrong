@@ -6,15 +6,21 @@ services:
     restart: on-failure
     volumes:
       - mongo-data:/data/db
+  node:
+    image: node:10-alpine
+    restart: on-failure
+    volumes:
+      - ./src:/usr/src/app/src:ro
+      - ./package.json:/usr/src/app/package.json:ro
+      - ./package-lock.json:/usr/src/app/package-lock.json
+      - node_modules:/usr/src/app/node_modules
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: production
     ports:
-      - "27017:27017"
-      
-  mongo-express:
-    image: mongo-express:latest
-    depends_on:
-      - mongo
-    ports:
-      - "8081:8081"
+      - "80:80"
+    command: npm install && node src/index.js
 
 volumes:
   mongo-data: {}
+  node_modules: {}
