@@ -8,11 +8,13 @@ const expressJwt = require('express-jwt');
 const randomWord = require('./words');
 const db = require('./db');
 
-if (!fs.existsSync('./secret')) {
+const SECRET_FILE = './secrets/secret'
+
+if (!fs.existsSync(SECRET_FILE)) {
     const secret = crypto.randomBytes(256/8)
-    fs.writeFileSync('./secret', secret);
+    fs.writeFileSync(SECRET_FILE, secret);
 }
-const jwtSecret = fs.readFileSync('./secret');
+const jwtSecret = fs.readFileSync(SECRET_FILE);
 const auth = expressJwt({ secret: jwtSecret })
 
 const app = express();
