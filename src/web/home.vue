@@ -10,7 +10,6 @@
 
 <style scoped>
   #title {
-    background-color: #C7E5EC;
     text-align: center;
     display: flex;
     flex-direction: column;
