@@ -177,11 +177,11 @@
     position: absolute;
     background-color: #F9D0DA;
     left: 20px;
-    top: 150px;
+    top: 200px;
     bottom: 0;
     right: initial;
-    width: 480px;
-    height: 400px;
+    width: 380px;
+    height: 270px;
     z-index: 10;
     border: dashed 10px rgb(255, 152, 178);
     display: flex;
