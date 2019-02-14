@@ -35,7 +35,7 @@
         const [name, pic] = atob(this.$route.params.whoareyou).split(',')
         data = (await axios.post('/api/game', { name, pic })).data;
       } catch (err) {
-        this.$router.push({ name: 'whoareyou' })
+        this.$router.replace({ name: 'whoareyou' })
         return;
       }
       const { words, time, token } = data;
