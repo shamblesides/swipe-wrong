@@ -32,7 +32,8 @@
       // get game data from server
       let data;
       try {
-        data = (await axios.post('/api/game', { name: this.$route.params.name})).data;
+        const [name, pic] = atob(this.$route.params.whoareyou).split(',')
+        data = (await axios.post('/api/game', { name, pic })).data;
       } catch (err) {
         this.$router.push({ name: 'whoareyou' })
         return;
