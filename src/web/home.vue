@@ -5,6 +5,9 @@
       <div class="heart">♥</div>
     </div>
     <router-link class="button" :to="{name:'whoareyou'}">Start</router-link>
+    <p style="padding-top:30px">
+    <a href="https://github.com/shamblesides/swipe-wrong" target="_blank">Source Code + Credits</a>
+    </p>
   </div>
 </template>
 
