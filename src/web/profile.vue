@@ -1,5 +1,6 @@
 <template>
   <div id="profile">
+    <h1>{{ name }}</h1>
     <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+i" v-for="(wordBlock, i) of words" :key="i" :style="{ left: wordBlock.x+'px', top: wordBlock.y+'px' }">
       {{ wordBlock.word }}
     </div>
@@ -14,7 +15,9 @@
       }
     },
     async mounted() {
-      this.words = (await axios.get('/api/profile/'+this.$route.params.id)).data
+      const { words, name } = (await axios.get('/api/profile/'+this.$route.params.id)).data
+      this.words = words;
+      this.name = name;
     },
   };
 </script>

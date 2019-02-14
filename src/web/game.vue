@@ -29,7 +29,7 @@
     },
     async mounted() {
       // get game data from server
-      const { words, time, token } = (await axios.get('/api/words')).data
+      const { words, time, token } = (await axios.post('/api/game', { name: this.$route.params.name})).data
       this.words = [];
       this.startTime = time;
 

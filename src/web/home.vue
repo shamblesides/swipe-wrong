@@ -1,7 +1,7 @@
 <template>
   <div id="title">
     <h1>Swipe Wrong</h1>
-    <router-link class="button" :to="{name:'game'}">Start</router-link>
+    <router-link class="button" :to="{name:'whoareyou'}">Start</router-link>
   </div>
 </template>
 
