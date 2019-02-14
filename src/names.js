@@ -55,6 +55,5 @@ module.exports = function getName() {
             const weirdName = name.replace(goodLetter, fullReplacement);
             if (weirdName !== name && !bad(weirdName)) return weirdName;
         }
-        console.warn(`(help me with ${name})`)
     }
 }
