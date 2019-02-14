@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <div id="bio-area">
-
+        <span v-if="instructionsVisible">Drag&amp;Drop Words Here!</span>
       </div>
       <div id="timer">
         {{ timer }}
@@ -24,7 +24,8 @@
       return {
         startTime: null,
         t: 0,
-        words: null
+        words: null,
+        instructionsVisible: true,
       }
     },
     async mounted() {
@@ -65,6 +66,7 @@
           const id = +evt.relatedTarget.id.substr(4)
           const wordBlock = this.words.find(({i}) => i === id);
           wordBlock.inProfile = true;
+          this.instructionsVisible = false;
         },
         ondragleave: evt => {
           const id = +evt.relatedTarget.id.substr(4)
@@ -173,13 +175,21 @@
   #bio-area {
     position: absolute;
     background-color: #F9D0DA;
-    left: 0;
-    top: 0;
+    left: 20px;
+    top: 150px;
     bottom: 0;
     right: initial;
-    width: 50%;
-    height: 100%;
+    width: 480px;
+    height: 400px;
     z-index: 10;
+    border: dashed 10px rgb(255, 152, 178);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #bio-area span {
+    opacity: 0.5;
+    font-size: 20px;
   }
   .word {
     padding: 10px;
