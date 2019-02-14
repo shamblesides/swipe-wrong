@@ -26,6 +26,7 @@ app.get('/api/names', (req, res) => {
         '/pics/cat.png',
         '/pics/goth.png',
         '/pics/hipster.png',
+        '/pics/anime.png',
         '/pics/makeup.png',
         '/pics/suit.png',
     ];
