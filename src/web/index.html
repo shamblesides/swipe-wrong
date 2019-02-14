@@ -23,6 +23,7 @@
       align-items: center;
     }
     #app {
+      position: relative;
       background-color: #C7E5EC;
       width: 1004px;
       height: 748px;
@@ -53,10 +54,17 @@
       color: rgba(0,0,0,0.8);
       background-color: #A7FCE9;
     }
+    #audio {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      z-index: 2;
+    }
   </style>
 </head>
 <body>
   <div id="app">
+    <audio controls loop autoplay id="audio" src="hottest-single.mp3"></audio>
     <router-view></router-view>
   </div>
 
