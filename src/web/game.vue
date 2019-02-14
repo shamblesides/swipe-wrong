@@ -22,7 +22,6 @@
   module.exports = ({
     data: function() {
       return {
-        view: 'title',
         startTime: null,
         t: 0,
         words: null
