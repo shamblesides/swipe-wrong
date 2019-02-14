@@ -29,7 +29,14 @@
     },
     async mounted() {
       // get game data from server
-      const { words, time, token } = (await axios.post('/api/game', { name: this.$route.params.name})).data
+      let data;
+      try {
+        data = (await axios.post('/api/game', { name: this.$route.params.name})).data;
+      } catch (err) {
+        this.$router.push({ name: 'whoareyou' })
+        return;
+      }
+      const { words, time, token } = data;
       this.words = [];
       this.startTime = time;
 
