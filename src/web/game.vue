@@ -4,6 +4,7 @@
       Loading!
     </template>
     <template v-else>
+      <card :name="name" :pic="pic" :words="[]" style="position: absolute; left: 20px; top: 30px"></card>
       <div id="bio-area">
         <span v-if="instructionsVisible">Drag&amp;Drop Words Here!</span>
       </div>
@@ -31,6 +32,9 @@
         words: null,
         instructionsVisible: true,
       }
+    },
+    components: {
+      'card': httpVueLoader('card-component.vue'),
     },
     async mounted() {
       // get game data from server
@@ -179,8 +183,8 @@
   #bio-area {
     position: absolute;
     background-color: #F9D0DA;
-    left: 20px;
-    top: 200px;
+    left: 30px;
+    top: 410px;
     bottom: 0;
     right: initial;
     width: 380px;
