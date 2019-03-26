@@ -88,4 +88,4 @@ app.get('/api/profile/:id([-0-9a-z]+)', async (req, res) => {
     
 });
 app.use(express.static(path.join(__dirname, 'web')));
-app.listen(80, (err) => console.log(err || 'Ready'));
+app.listen(process.env.PORT || 80, (err) => console.log(err || 'Ready'));
