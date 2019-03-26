@@ -11,7 +11,10 @@
       <div id="timer">
         {{ timer }}
       </div>
-      <button id="submit-button" @click="submit" v-if="timerRaw < -6">All Done</button>
+      <div id="all-done-block" v-if="timerRaw < -6">
+        <p>All done arranging your profile?</p>
+        <button class="button" id="submit-button" @click="submit">All Done</button>
+      </div>
       <div class="word" :class="{selected:wordBlock.selected}" :id="'word'+wordBlock.i" v-for="wordBlock of words" :key="wordBlock.i" :style="{ left: x(wordBlock), top: y(wordBlock), 'z-index': wordBlock.inProfile ? 15 : 0 }">
         {{ wordBlock.word }}
       </div>
@@ -222,9 +225,14 @@
       transform: rotate(-5deg);
     }
   }
-  #submit-button {
+  #all-done-block {
     position: absolute;
-    right: 10px;
-    top: 80px;
+    right: 0px;
+    top: 200px;
+    width: 50%;
+    text-align: center;
+  }
+  #all-done-block p {
+    font-size: 20px;
   }
 </style>
