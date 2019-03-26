@@ -14,10 +14,6 @@
         </div>
       </div>
     </div>
-    <div id="share-me">
-      <h3>Link to this!</h3>
-      <a :href="linkhere" target="_blank">{{linkhere}}</a>
-    </div>
     </template>
   </div>
 </template>
@@ -32,7 +28,6 @@
         name: null,
         pic: null,
         words: [],
-        linkhere: location.href,
       }
     },
     async mounted() {
@@ -45,12 +40,6 @@
 </script>
 
 <style scoped>
-  #share-me {
-    position: absolute;
-    right: 0;
-    width: 300px;
-    top: 300px;
-  }
   #profile {
     text-align: center;
   }
