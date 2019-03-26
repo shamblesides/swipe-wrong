@@ -4,7 +4,7 @@
     <div v-for="n in 5" class="heart-container" :id="'heart'+n" :key="'heart'+n">
       <div class="heart">♥</div>
     </div>
-    <router-link class="button" :to="{name:'whoareyou'}">Start</router-link>
+    <button class="button" @click="void $emit('nav', {name:'whoareyou'})">Start</button>
     <p style="padding-top:30px">
     <a href="https://github.com/shamblesides/swipe-wrong" target="_blank">Source Code + Credits</a>
     </p>

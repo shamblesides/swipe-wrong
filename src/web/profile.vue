@@ -24,6 +24,9 @@
 
 <script>
   module.exports = {
+    props: {
+      id: String,
+    },
     data: function() {
       return {
         name: null,
@@ -33,7 +36,7 @@
       }
     },
     async mounted() {
-      const { words, name, pic } = (await axios.get('/api/profile/'+this.$route.params.id)).data
+      const { words, name, pic } = (await axios.get('/api/profile/'+this.id)).data
       this.words = words;
       this.name = name;
       this.pic = pic;

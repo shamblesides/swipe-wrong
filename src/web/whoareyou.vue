@@ -55,7 +55,7 @@
         this.pics.unshift(this.pics.pop());
       },
       submit() {
-        this.$router.push({ name: 'game', params: { whoareyou: btoa(this.name+','+this.pic) } })
+        this.$emit('nav', { name: 'game', params: { name: this.name, pic: this.pic } })
       }
     },
   })

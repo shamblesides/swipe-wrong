@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"> 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vue-router"></script>
   <script src="https://unpkg.com/http-vue-loader"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/interactjs@1.3/dist/interact.min.js"></script>
@@ -64,23 +63,13 @@
   </style>
 </head>
 <body>
-  <div id="app">
-    <audio controls loop autoplay id="audio" src="hottest-single.mp3"></audio>
-    <router-view></router-view>
-  </div>
+  <div id="app"></div>
 
   <script>
     new Vue({
-      el: '#app',
-      router: new VueRouter({
-        routes: [
-          { path: '/', name: 'home', component: httpVueLoader('home.vue') },
-          { path: '/who', name: 'whoareyou', component: httpVueLoader('whoareyou.vue') },
-          { path: '/g/:whoareyou', name: 'game', component: httpVueLoader('game.vue') },
-          { path: '/p/:id', name: 'profile', component: httpVueLoader('profile.vue') },
-        ]
-      })
-    })
+      render: h => h('app'),
+      components: { app: httpVueLoader('app.vue') },
+    }).$mount('#app')
   </script>
 </body>
 </html>

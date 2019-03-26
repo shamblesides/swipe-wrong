@@ -20,6 +20,10 @@
 
 <script>
   module.exports = ({
+    props: {
+      name: String,
+      pic: String,
+    },
     data: function() {
       return {
         startTime: null,
@@ -32,10 +36,9 @@
       // get game data from server
       let data;
       try {
-        const [name, pic] = atob(this.$route.params.whoareyou).split(',')
-        data = (await axios.post('/api/game', { name, pic })).data;
+        data = (await axios.post('/api/game', { name: this.name, pic: this.pic })).data;
       } catch (err) {
-        this.$router.replace({ name: 'whoareyou' })
+        this.$emit('nav', { name: 'whoareyou' })
         return;
       }
       const { words, time, token } = data;
@@ -151,7 +154,7 @@
 
         const res = await axios.post('/api/profile', words);
         localStorage.setItem("profileToken", res.data.token)
-        this.$router.push({ name: 'profile', params: { id: res.data.slug }})
+        this.$emit('nav', { name: 'profile', params: { id: res.data.slug }})
       }
     },
   })
