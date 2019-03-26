@@ -20,6 +20,7 @@ services:
     working_dir: /usr/src/app
     environment:
       NODE_ENV: production
+      APP_MONGO_URL: "mongodb://mongo:27017"
     ports:
       - "3000:3000"
     command: sh -c 'npm install && node src/index.js'
