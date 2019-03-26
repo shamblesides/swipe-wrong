@@ -55,7 +55,7 @@
         this.pics.unshift(this.pics.pop());
       },
       submit() {
-        this.$emit('nav', { name: 'game', params: { name: this.name, pic: this.pic } })
+        this.$emit('nav', { name: 'game-intro', params: { name: this.name, pic: this.pic } })
       }
     },
   })

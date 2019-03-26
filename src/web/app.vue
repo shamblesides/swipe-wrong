@@ -11,6 +11,7 @@
     components: {
       home: httpVueLoader('home.vue'),
       whoareyou: httpVueLoader('whoareyou.vue'),
+      'game-intro': httpVueLoader('game-intro.vue'),
       game: httpVueLoader('game.vue'),
       profile: httpVueLoader('profile.vue'),
     },
