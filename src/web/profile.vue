@@ -6,6 +6,8 @@
     <template v-else>
       <h2>Looking good!</h2>
       <card :name="name" :pic="pic" :words="words"></card>
+      <button id="play-again-button" class="button" @click="playAgain">New Profile</button>
+      <button id="next-button" class="button" @click="next">Time to Date!</button>
     </template>
   </div>
 </template>
@@ -31,11 +33,30 @@
     components: {
       'card': httpVueLoader('card-component.vue'),
     },
+    methods: {
+      playAgain: function() {
+        this.$emit('nav', { name: 'home' });
+      },
+      next: function() {
+        alert('Coming soon!')
+      }
+    }
   };
 </script>
 
 <style scoped>
   #profile {
     text-align: center;
+  }
+  .button {
+    position: absolute;
+    top: 300px;
+    font-size: 24px;
+  }
+  #play-again-button {
+    left: 20px;
+  }
+  #next-button {
+    right: 20px;
   }
 </style>
