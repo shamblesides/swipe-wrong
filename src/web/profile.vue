@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <h2>Looking good!</h2>
-      <card :name="name" :pic="pic" :words="words"/>
+      <card :name="name" :pic="pic" :words="words"></card>
     </template>
   </div>
 </template>
