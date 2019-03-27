@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
+const freqMap = fs.readFileSync(path.resolve(__dirname, '../data/phrases.txt'))
     .toString()
     .split('\n')
     .map(line => line.trim())
@@ -15,7 +15,7 @@ const freqMap = fs.readFileSync(path.resolve(__dirname, './data/phrases.txt'))
     }))
     .reduce((map, { word, weight }) => word ? map.set(word, weight) : map, new Map())
 
-const [words, randMax] = fs.readFileSync(path.resolve(__dirname, './data/chosen.txt'))
+const [words, randMax] = fs.readFileSync(path.resolve(__dirname, '../data/chosen.txt'))
     .toString()
     .split('\n')
     .map(word => ({ word, weight: freqMap.get(word) }))

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const names = fs.readFileSync(path.resolve(__dirname, './data/names.txt'))
+const names = fs.readFileSync(path.resolve(__dirname, '../data/names.txt'))
     .toString()
     .split('\n');
 
