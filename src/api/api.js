@@ -94,4 +94,14 @@ app.get('/profile', async (req, res) => {
     res.json(profiles);
 });
 
+app.get('/profile/:id([-0-9a-z]+)', async (req, res) => {
+    const profile = await (await db()).collection('profiles').findOne({ _id: req.params.id });
+    if (profile) {
+        const { words, name, pic } = profile;
+        res.json({ words, name, pic });
+    } else {
+        res.status(404).json({ error: 'Not found' })
+    }
+});
+
 module.exports = app;
