@@ -14,6 +14,7 @@
       'game-intro': httpVueLoader('game-intro.vue'),
       game: httpVueLoader('game.vue'),
       profile: httpVueLoader('profile.vue'),
+      date: httpVueLoader('date.vue'),
     },
     data() {
       return {

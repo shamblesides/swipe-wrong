@@ -38,7 +38,7 @@
         this.$emit('nav', { name: 'home' });
       },
       next: function() {
-        alert('Coming soon!')
+        this.$emit('nav', { name: 'date' });
       }
     }
   };

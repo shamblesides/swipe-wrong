@@ -82,14 +82,16 @@ app.post('/profile', auth, async (req, res) => {
     res.status(200).json({ slug, token });
 });
 
-app.get('/profile/:id([-0-9a-z]+)', async (req, res) => {
-    const profile = await (await db()).collection('profiles').findOne({ _id: req.params.id });
-    if (profile) {
-        const { words, name, pic } = profile;
-        res.json({ words, name, pic });
-    } else {
-        res.status(404).json({ error: 'Not found' })
-    }
+app.get('/profile', async (req, res) => {
+    const latestDocs = await (await db()).collection('profiles').find().sort({$natural: -1}).limit(3).toArray();
+    const randomDocs = await (await db()).collection('profiles').aggregate([{ $sample: { size: 3 } }]).toArray();
+
+    // all of the docs here, without duplicates
+    const docs = latestDocs.concat(randomDocs)
+        .filter((doc, _, arr) => arr.find(({ _id }) => _id === doc._id) === doc)
+
+    const profiles = docs.map(({ name, pic, words }) => ({ name, pic, words }));
+    res.json(profiles);
 });
 
 module.exports = app;
