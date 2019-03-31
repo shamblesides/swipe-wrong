@@ -4,10 +4,10 @@
       Loading profiles...
     </template>
     <template v-else>
-      <h2>How about They</h2>
+      <i id="back-button" class="far fa-arrow-alt-circle-left" @click="playAgain"></i>
       <card :name="profile.name" :pic="profile.pic" :words="profile.words"></card>
-      <button id="play-again-button" class="button" @click="playAgain">All Done</button>
-      <button id="next-button" class="button" @click="swipeRight">Next Please</button>
+      <button id="swipe-left-button" class="button" @click="swipeLeft">NO</button>
+      <button id="swipe-right-button" class="button" @click="swipeRight">YES</button>
     </template>
   </div>
 </template>
@@ -53,18 +53,29 @@
 </script>
 
 <style scoped>
+  #back-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    padding: 20px;
+    font-size: 60px;
+  }
   #profile {
     text-align: center;
+    padding-top: 5px;
   }
   .button {
     position: absolute;
     top: 300px;
     font-size: 24px;
   }
-  #play-again-button {
+  #swipe-left-button {
     left: 20px;
+    background-color: #ff698e;
   }
-  #next-button {
+  #swipe-right-button {
     right: 20px;
+    background-color: #A7FCE9 ;
   }
 </style>
