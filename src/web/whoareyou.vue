@@ -40,6 +40,9 @@
       const { names, pics, token } = (await axios.get('/api/names')).data;
       this.names = names;
       this.pics = pics;
+      
+      // shuffle pics
+      this.pics = this.pics.concat(this.pics.splice(0, Math.floor(Math.random()*this.pics.length)));
 
       // auth bearer to submit data
       axios.defaults.headers.common.authorization = 'Bearer ' + token;
