@@ -9,7 +9,7 @@ MongoClient.connect(url, {useNewUrlParser:true}, (err, client) => {
         console.error(`Could not connect to ${url}: ${err}`)
         return process.exit(1);
     }
-    _db = client.db('swipe-wrong')
+    _db = client.db()
 })
 
 module.exports = async function db() {
