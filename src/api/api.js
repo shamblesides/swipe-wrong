@@ -45,7 +45,7 @@ app.post('/game', auth, (req, res) => {
     if (!names.includes(name)) return res.status(400).json({ error: "Invalid name" });
     if (!pics.includes(pic)) return res.status(400).json({ error: "Invalid pic" });
     // send game data
-    const time = 1;
+    const time = 60;
     const words = Array(time*4).fill().map(randomWord);
     const futureSlug = nanoid('abcdefhjknpstxyz23456789', 12).match(/.{4}/g).join('-');
     const token = jwt.sign({ words, name, pic, futureSlug }, jwtSecret, { expiresIn: '15 minutes' })
