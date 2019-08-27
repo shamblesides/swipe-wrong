@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const url = process.env.APP_MONGO_URL || process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017/swipe-wrong';
 
 let _db = null;
 
