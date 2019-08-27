@@ -1,6 +1,8 @@
 # Swipe Wrong
 
-[Entry for Valentines Jams](https://itch.io/jam/valentines-jams).
+**[Play it online!](https://shamblesides.itch.io/swipe-wrong)**
+
+Entry for [Valentines Jams](https://itch.io/jam/valentines-jams) on itch.io.
 
 ## Credits
 
