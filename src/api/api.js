@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path')
 const crypto = require('crypto');
 const express = require('express');
+const cors = require('cors');
 const nanoid = require('nanoid/generate');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
@@ -21,6 +22,7 @@ const auth = expressJwt({ secret: jwtSecret })
 const app = express.Router();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/names', (req, res) => {
     const names = Array(100).fill().map(getName);
