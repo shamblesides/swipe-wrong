@@ -66,6 +66,10 @@
   <div id="app"></div>
 
   <script>
+    if (location.hostname.endsWith('netlify.com')) {
+      axios.defaults.baseURL = 'https://swipe-wrong.herokuapp.com/';
+    }
+
     new Vue({
       render: h => h('app'),
       components: { app: httpVueLoader('app.vue') },
