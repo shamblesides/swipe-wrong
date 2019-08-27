@@ -43,7 +43,7 @@
         this.profiles.shift();
       },
       swipeLeft: function() {
-
+        this.profiles.shift();
       }
     },
     components: {
