@@ -85,11 +85,12 @@ app.post('/profile', auth, async (req, res) => {
 });
 
 app.get('/profile', async (req, res) => {
-    const latestDocs = await (await db()).collection('profiles').find().sort({$natural: -1}).limit(3).toArray();
-    const randomDocs = await (await db()).collection('profiles').aggregate([{ $sample: { size: 3 } }]).toArray();
+    // const latestDocs = await (await db()).collection('profiles').find().sort({$natural: -1}).limit(3).toArray();
+    const randomDocs = await (await db()).collection('profiles').aggregate([{ $sample: { size: 50 } }]).toArray();
 
     // all of the docs here, without duplicates
-    const docs = latestDocs.concat(randomDocs)
+    // const docs = latestDocs.concat(randomDocs)
+    const docs = randomDocs
         .filter((doc, _, arr) => arr.find(({ _id }) => _id === doc._id) === doc)
 
     const profiles = docs.map(({ name, pic, words }) => ({ name, pic, words }));
