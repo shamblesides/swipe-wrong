@@ -1,5 +1,4 @@
 dependencies:
-  csv-parse: 4.8.8
   express: 4.17.1
   express-jwt: 5.3.1
   jsonwebtoken: 8.5.1
@@ -73,10 +72,6 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==
-  /csv-parse/4.8.8:
-    dev: false
-    resolution:
-      integrity: sha512-Kv3Ilz2GV58dOoHBXRCTF8ijxlLjl80bG3d67XPI6DNqffb3AnbPbKr/WvCUMJq5V0AZYi6sukOaOQAVpfuVbg==
   /debug/2.6.9:
     dependencies:
       ms: 2.0.0
@@ -512,7 +507,6 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  csv-parse: ^4.8.8
   express: ^4.17.1
   express-jwt: ^5.3.1
   jsonwebtoken: ^8.5.1
